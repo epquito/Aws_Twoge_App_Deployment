@@ -48,7 +48,8 @@ During this assessment we will learn how to properly deploy a Ec2 instance for a
   12)  Select VPC Security groups -> select the Security group you created for your database -> Edit inbound rules  -> it should loom like this -> Security group rule Id ->           Type(PstgreSQL) -> Protocol(TCP) -> Port Rage(5432) -> Source(Custom) -> Destiniation(Security group of your EC2 instance previosly created)
 
 #Creating a S3 bucket to hold static files
-  1)
+
+  1)Search 
 
 
   
