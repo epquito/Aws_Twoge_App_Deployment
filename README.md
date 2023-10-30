@@ -4,7 +4,9 @@ During this assessment we will learn how to properly deploy a Ec2 instance for a
 #Devleopment tools 
 
   1)AWS Account
+  
   2)WSL2 or any linux op
+  
   3)DBeaver or any db 
 
 
