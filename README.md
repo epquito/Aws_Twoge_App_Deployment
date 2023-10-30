@@ -19,6 +19,21 @@ During this assessment we will learn how to properly deploy a Ec2 instance for a
    3) Network Settings(CLICK EDIT) -> Vpc(CHOOSE EITHER DEFAULT VPC OR ANY OTHER ONE YOU MAY HAVE CREATED) -> Subnet (choose a public subnet) -> Auto-assign Ip(disable)
       Firewall/Security group -> Create Security Group -> Make security group that associates with the ec2 deployment -> Add Description -> Makes sure the security group has ->         SHH/Http/Https -> Source type(Custom) -> Source(0.0.0.0/0) -> Launch Instance.
 
+      
+#Creatin Iam role for Ec2 to have Access to your S3 buckets
+
+  1)  Search bar -> Iam -> Left side should be "Roles" and click -> Create role
+
+  2)  Trusted entity type -> Aws service -> use case -> Ec2 -> next
+
+  3)  Permission Polocies -> Search bar -> S3 -> AmazonS3FullAcces(click) -> Next
+
+  4)  Role Details -> Role name -> Enter role name -> Create role
+
+  5)  Search bar -> ec2 -> Choose Instance -> Click Actions -> Security -> Modify Iam role -> select the Iam role we just created 
+
+
+
 #Deploying RDS
 
   1)  Search Bar -> RDS -> Create database
@@ -49,8 +64,47 @@ During this assessment we will learn how to properly deploy a Ec2 instance for a
 
 #Creating a S3 bucket to hold static files
 
-  1)Search 
+  1)  Search bar -> S3 -> Create bucket
+    
+  2)  Bucket name(Create bucket name) -> AWS Region(Use the Region assigned to you)
 
+  3)  Object Ownershipp -> ACLs disabled
 
-  
+  4)  Block Public Acces settings for this bucket -> Block all public access(unclick) -> Acknowlege (click)
+
+  5)  Bucket versioning(Enabled)
+
+  6)  Create bucket(Leave everything else default)
+
+  7)  Click on your bucket again
+
+  8)  Object page -> Upload -> Choose the static files you want to upload
+
+  9)  On tab click Permissions -> Create bucket policy That will allow Ec2 to have access to object/object version
+
+  10)  {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowEC2Instance",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "ec2.amazonaws.com"
+            },
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": "arn:aws:s3:::s3-bucket-name/*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:userid": "arn:aws:iam::role-ID/Name of role"
+                }
+            }
+        }
+    ]
+}
+      
+
+#SSH into Ec2 to deploy Flask application With Gunicorn/Nginx
   
