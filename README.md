@@ -83,6 +83,7 @@ During this assessment we will learn how to properly deploy a Ec2 instance for a
   9)  On tab click Permissions -> Create bucket policy That will allow Ec2 to have access to object/object version
 
   10)  {
+      
     "Version": "2012-10-17",
     "Statement": [
         {
@@ -107,4 +108,51 @@ During this assessment we will learn how to properly deploy a Ec2 instance for a
       
 
 #SSH into Ec2 to deploy Flask application With Gunicorn/Nginx
+
+  1) Inside Aws console go to the search bar and type ec2
+
+     
+  2) Select a ec2 you want to ssh into
+
+     
+  3) once selected click on connect and click on ssh client
+
+     
+  4) There should be all the way on the bottom "Example:" that would have a ssh comand to copy
+
+     
+  5) go to your terminal
+
+      
+  6) make sure you change directory that holds your key pair you selected for that instance it should end with a .pem
+
+      
+  7) paste the command and it will ask a yes or no to continue type yes and press enter
+
+      
+  8) If the command for ssh  ends with a "root@ec2-ip" change the "root" to "ec2-user"
+
+#Installing Dependicies and configuring Ec2 instance for deployment
+
+  1) sudo yum update -y
+
   
+  2) sudo yum install git -y
+
+
+  3) sudo amazon-linux-extras install nginx1
+
+
+  4) git clone https://github.com/chandradeoarya/twoge.git
+
+
+  5) cd twoge
+  
+  
+  6) sudo yum intall python3-pip -y
+  
+  
+  7) python3 -m venv venv
+
+
+
