@@ -156,7 +156,133 @@
       
 # Once you have all the dependicies installed now you change the repository you just installed for your personal deployment
     
-        1) 
+        1) sudo yum update -y
+        
+        
+        2) sudo yum install git -y
+        
+        
+        3) sudo amazon-linux-extras install nginx1
+        
+        
+        4) git clone https://github.com/chandradeoarya/twoge.git
+        
+        
+        5) cd twoge
+        
+        
+        6) sudo yum intall python3-pip -y
+        
+        
+        7) python3 -m venv venv
+
+        
+        8) sudo vim app.py
+        	line 11 : app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI','postgresql://username:password@EndPoint-RDS:5432/dbName')
+        
+        
+        9) source venv/bin/activate
+        
+        
+        10) pip install -r requirements.txt
+        
+        
+        11) cd /etc/systemd/system
+        
+        
+        12) sudo vim twoge.service
+
+        
+        	[Unit]
+
+         
+        	Description=Gunicorn instance to serve twoge
+        
+        	Wants=network.target
+
+         
+        	After=syslog.target network-online.target
+        
+        	[Service]
+        	Type=simple
+
+         
+        	WorkingDirectory=/home/ec2-user/twoge
+
+         
+        	Environment="PATH=/home/ec2-user/twoge/venv/bin"
+
+         
+        	ExecStart=/home/ec2-user/twoge/venv/bin/gunicorn 	app:app -c /home/ec2-user/twoge/gunicorn_config.py
+
+         
+        	Restart=always
+
+         
+        	RestartSec=10
+        
+        	[Install]
+        	WantedBy=multi-user.target
+
+         
+        13) sudo systemctl enable twoge
+
+        
+        14) sudo systemctl start twoge
+
+        
+        15) sudo systemctl ststus twoge
+
+        
+        16) cd /etc/nginx
+
+        
+        17) sudo mkdir sites-available
+
+        
+        18) sudo mkdir sites-enabled
+
+        
+        19) cd sites-available
+
+        
+        20)sudo vim twoge_nginx
+        	
+        	server {
+
+         
+           	 listen 80;
+
+             
+            	0.0.0.0/0;
+
+             
+        
+            	location / {
+
+             
+                	proxy_pass http://0.0.0.0:9876;  # Assuming Gunicorn is running on port 8000
+
+                 
+                	include /etc/nginx/proxy_params;
+            }
+
+            
+        }
+        
+        21) sudo ln -s /etc/nginx/sites-available/twoge_nginx /etc/nginx/sites-enabled/
+
+        
+        22) sudo nginx -t
+
+        
+        23) sudo systemctl reload nginx
+
+        
+        24) sudo systemctl enable nginx
+
+        
+        25) sudo systemctl start nginx
 
 
 
