@@ -132,7 +132,7 @@
       
       8) If the command for ssh  ends with a "root@ec2-ip" change the "root" to "ec2-user"
 
-#Installing Dependicies and configuring Ec2 instance for deployment
+#Installing Dependicies inside Ec2
 
       1) sudo yum update -y
 
@@ -153,6 +153,10 @@
   
   
       7) python3 -m venv venv
+      
+# Once you have all the dependicies installed now you change the repository you just installed for your personal deployment
+    
+        1) 
 
 
 
