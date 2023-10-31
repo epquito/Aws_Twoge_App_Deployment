@@ -154,7 +154,7 @@
   
       7) python3 -m venv venv
       
-# Once you have all the dependicies installed now you change the repository you just installed for your personal deployment
+#Once you have all the dependicies installed now you change the repository you just installed for your personal deployment
     
         1) sudo yum update -y
         
