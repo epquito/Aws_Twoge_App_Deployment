@@ -213,7 +213,8 @@
         	Environment="PATH=/home/ec2-user/twoge/venv/bin"
 
          
-        	ExecStart=/home/ec2-user/twoge/venv/bin/gunicorn 	app:app -c /home/ec2-user/twoge/gunicorn_config.py
+        	ExecStart=/home/ec2-user/twoge/venv/bin/gunicorn 	app:app -c /home/ec2-        
+            user/twoge/gunicorn_config.py
 
          
         	Restart=always
@@ -284,5 +285,56 @@
         
         25) sudo systemctl start nginx
 
+#Create A Image of the instance 
+
+        1) Select instance -> Actions -> Image and templates -> Create Image -> Enter image name->
+            Add discription -> Leave everything else default -> Create Image
+
+
+#Create Launch Template using the Image created 
+
+        1) Launch Templates -> Create launch template -> Enter name -> Template version ->
+        Application and OS images -> My AMIS -> Owned by me -> Amazon Machine Image (Select                the Image we created of the instance)
+
+        2) Instance Type(t2.micro) -> Key pair(select the one used when ceating Ec2) 
+
+        3) Network Setting -> Subnet leave default -> Firewall/Security group(Select existing              security group created for ec2 instance)    
+
+        4) Leave everything default Except for Advanced details -> IAM instance profile -> Select          The Iam role we created that allows ec2 to have access to the s3 bbucket -> launch template
+            
+#Creating target group
+
+        1) Target groups -> Create target groups -> Instances -> Enter target group name ->                 Protocol port(9876) -> IPv4 -> Select Vpc(Vpc we used for the Ec2 instance) -> Leave               everything else default -> next
+
+        2) Register targets -> Select Ec2 instances you want to register -> Include as pending             below -> Create target group
+
+#Create Load Balancers  ->
+
+        1) Load Balancers -> Create load balancer -> Application Load Balancer -> Load Balancer             name -> Select Vpc(same one we choose for Ec2) -> Mappings -> Select Az(Availability               Zones) -> create SG that has http/https and a custom Tcp with port range 9876 ->                   Listeners and routing -> select Target group previosly created -> Create Load balancer
+
+#Create ASG(Auto Scaling Group)
+
+        1) Auto scaling groups -> Create Auto Scaling group -> enter name of ASG -> Select Launch          template previosly created -> select vpc(The one we used on Ec2) -> Select Availability            zones -> Attach to an existing load balancer -> Select Load Balancer -> Health checks ->           Select Turn on ELB health checks -> Helath check grace period(120) -> next -> Select Group 
+        Size Recomended: Desired(2), Minimum(1), Maximum(3) -> Scaling Policies(none) -> Add               Notification -> Create Topic -> Eneter topic name -> Add your email as recipients ->               Choose event types(Launch, Terminate) make sure to confirm subscriptions -> Click next             until create ASG -> Create ASG
+
+
+#Create ASG dynamic policy
+
+        1) Slelect ASG -> Automatic Scaling -> Dynamic caling policies -> Create Dynamic scaling           policy -> Policy type -> Simple Scaling -> Enter policy name -> CLoudWatch alarm -> Create         CloudWatch 
+
+        2) Metric -> Select Metric -> EC2 -> By ASG -> Select AutoScalingGRoupName to populate the         ASG you just created -> select your specific ASG that has the metric Value of                     "CPUUtilization" ->   Select Metric
+
+        3) Specify Metric and conditions -> Static(average) -> Period(1minute) -> Condition ->             Threshold(Satic) -> Whenever CPUtilization is (Greeater/Equal) -> Than(Enter Threshold) ->
+
+        4) Notifications -> Create topic -> Enter topic name -> Enter Email endpoint -> create             Topic
+
+        5) Name and description -> Enter alarm name -> Next -> Create Alarm
+
+        6) Go back Create Dynamic Scaling Polocy -> CLick Refresh button next to CLoudWatch Alarm             and select Newly created alarm -> Take Action -> Add / 1 / capacity units -> And then              Wait (60) -> Create 
+
+# Now you have just Deployed A Flask Application With Gunicorn and Nginx On a Ec2 With ELB,ASG allowing the application to have high scalability and resiliency
+        
+
+        
 
 
