@@ -40,7 +40,7 @@
 
     2)  Standard create -> Engine type(PostgreSQL) -> Engine Version(15.3-r2) -> Templates(Free tier)
 
-    3)  Settings -> DB instance identifier(Create and enter the name of db) -> Master username(Would reccomend changing username) -> Master Password(Enter personal password) ->           Confirm Password
+    3)  Settings -> DB instance identifier(Create and enter the name of db) -> Master username(Would reccomend changing username) -> Master Password(Enter personal password)>     Confirm Password
 
     4)  Instance configuration -> db.t3.micro
 
