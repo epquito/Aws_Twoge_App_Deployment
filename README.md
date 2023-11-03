@@ -133,28 +133,7 @@ Firewall/Security group -> Create Security Group -> Make security group that ass
       
 8) If the command for ssh  ends with a "root@ec2-ip" change the "root" to "ec2-user"
 
-#Installing Dependicies inside Ec2
 
-1) sudo yum update -y
-
-  
-2) sudo yum install git -y
-
-
-3) sudo amazon-linux-extras install nginx1
-
-
-4) git clone https://github.com/chandradeoarya/twoge.git
-    
-
-5) cd twoge
-  
-  
-6) sudo yum intall python3-pip -y
-  
-  
-7) python3 -m venv venv
-      
 #Once you have all the dependicies installed now you change the repository you just installed for your personal deployment
     
 1) sudo yum update -y
