@@ -1,7 +1,7 @@
-#Assesment-1
+# Assesment-1
 During this assessment we will learn how to properly deploy a Ec2 instance for a Flask application that will use both Gunicorn and NGINX. 
 
-#Devleopment tools.
+# Devleopment tools.
 
 - AWS Account.
   
@@ -9,7 +9,7 @@ During this assessment we will learn how to properly deploy a Ec2 instance for a
   
 - DBeaver or any db.
 
-#Deploying Ec2.
+# Deploying Ec2.
 
 - Search Bar -> Ec2 -> Launch Instance.
 - Enter name -> Application and OS Images (SELECT AMAZON LINUX ) -> Amazon Machine Image(AMAZON LINUX 2 AMI) -> Instance Type(t2.micro) -> Key pair -> Select key pair associated to your specific account.
