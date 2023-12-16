@@ -30,57 +30,56 @@ Firewall/Security group -> Create Security Group -> Make security group that ass
   
 
 
-#Deploying RDS
+# Deploying RDS
 
-1)  Search Bar -> RDS -> Create database
+-  Search Bar -> RDS -> Create database
 
-2)  Standard create -> Engine type(PostgreSQL) -> Engine Version(15.3-r2) -> Templates(Free tier)
+-  Standard create -> Engine type(PostgreSQL) -> Engine Version(15.3-r2) -> Templates(Free tier)
 
-3)  Settings -> DB instance identifier(Create and enter the name of db) -> Master username(Would reccomend changing username) -> Master Password(Enter personal password)>     Confirm Password
+-  Settings -> DB instance identifier(Create and enter the name of db) -> Master username(Would reccomend changing username) -> Master Password(Enter personal password)>     Confirm Password
 
-4)  Instance configuration -> db.t3.micro
+-  Instance configuration -> db.t3.micro
 
-5)  Storage -> Leave default values -> Storage autoscaling -> deselect Enable Storage autoscaling
+-  Storage -> Leave default values -> Storage autoscaling -> deselect Enable Storage autoscaling
 
-6)  Connenctivity -> Don't connect to an Ec2 compute resource -> IPv4 -> Virtual private cloud(Choose the same vpc you selected on the Ec2) ->  DB subnet group(Leave 
+-  Connenctivity -> Don't connect to an Ec2 compute resource -> IPv4 -> Virtual private cloud(Choose the same vpc you selected on the Ec2) ->  DB subnet group(Leave 
       deafult) -> Public Access(Yes) -> VPC security group(Create new) -> New Vpc security group name(enetr name for security group)# leave the rest deafult -> Additional 
       configurations -> Database port(5432)
 
-7)  Database authentication -> Password authentication(Select)
+-  Database authentication -> Password authentication(Select)
 
-8)  leave all values under Monitoring as default and dont change anything
+-  leave all values under Monitoring as default and dont change anything
 
-9)  Additional configuration -> Database option -> Initial database name(Eneter database name associated to your flask app)
+-  Additional configuration -> Database option -> Initial database name(Eneter database name associated to your flask app)
 
-10)  Select Create Database #Keep in mind the inilization of the database is going to take about 5-10 minutes
+-  Select Create Database #Keep in mind the inilization of the database is going to take about 5-10 minutes
 
-11)  Once Database is created select and it should direct you to a page with a tab that has Connectivity & security
+-  Once Database is created select and it should direct you to a page with a tab that has Connectivity & security
 
-12)  Select VPC Security groups -> select the Security group you created for your database -> Edit inbound rules  -> it should loom like this -> Security group rule Id ->           Type(PstgreSQL) -> Protocol(TCP) -> Port Rage(5432) -> Source(Custom) -> Destiniation(Security group of your EC2 instance previosly created)
+-  Select VPC Security groups -> select the Security group you created for your database -> Edit inbound rules  -> it should loom like this -> Security group rule Id ->           Type(PstgreSQL) -> Protocol(TCP) -> Port Rage(5432) -> Source(Custom) -> Destiniation(Security group of your EC2 instance previosly created)
 
-#Creating a S3 bucket to hold static files
+# Creating a S3 bucket to hold static files
 
-1)  Search bar -> S3 -> Create bucket
+-  Search bar -> S3 -> Create bucket
     
-2)  Bucket name(Create bucket name) -> AWS Region(Use the Region assigned to you)
+-  Bucket name(Create bucket name) -> AWS Region(Use the Region assigned to you)
 
-3)  Object Ownershipp -> ACLs disabled
+-  Object Ownershipp -> ACLs disabled
 
-4)  Block Public Acces settings for this bucket -> Block all public access(unclick) -> Acknowlege (click)
+-  Block Public Acces settings for this bucket -> Block all public access(unclick) -> Acknowlege (click)
 
-5)  Bucket versioning(Enabled)
+-  Bucket versioning(Enabled)
 
-6)  Create bucket(Leave everything else default)
+-  Create bucket(Leave everything else default)
 
-7)  Click on your bucket again
+-  Click on your bucket again
+  
+-  Object page -> Upload -> Choose the static files you want to upload
 
-8)  Object page -> Upload -> Choose the static files you want to upload
+-  On tab click Permissions -> Create bucket policy That will allow Ec2 to have access to object/object version
 
- 9)  On tab click Permissions -> Create bucket policy That will allow Ec2 to have access to object/object version
-
-10)
-          {
-      
+- ```bash
+  {    
         "Version": "2012-10-17",
         "Statement": [
         {
@@ -102,166 +101,145 @@ Firewall/Security group -> Create Security Group -> Make security group that ass
         }
         ]
         }
+  ```
       
 
-#SSH into Ec2 to deploy Flask application With Gunicorn/Nginx
+# SSH into Ec2 to deploy Flask application With Gunicorn/Nginx
 
-1) Inside Aws console go to the search bar and type ec2
-
-     
-2) Select a ec2 you want to ssh into
+- Inside Aws console go to the search bar and type ec2
 
      
-3) once selected click on connect and click on ssh client
-
+- Select a ec2 you want to ssh into
      
-4) There should be all the way on the bottom "Example:" that would have a ssh comand to copy
-
-     
-5) go to your terminal
-
-      
-6) make sure you change directory that holds your key pair you selected for that instance it should end with a .pem
-
-      
-7) paste the command and it will ask a yes or no to continue type yes and press enter
-
-      
-8) If the command for ssh  ends with a "root@ec2-ip" change the "root" to "ec2-user"
-
-
-#Once you have all the dependicies installed now you change the repository you just installed for your personal deployment
+- once selected click on connect and click on ssh client
     
-1) sudo yum update -y
+- There should be all the way on the bottom "Example:" that would have a ssh comand to copy
+    
+- go to your terminal
+      
+- make sure you change directory that holds your key pair you selected for that instance it should end with a .pem
+
+- paste the command and it will ask a yes or no to continue type yes and press enter
+     
+- If the command for ssh  ends with a "root@ec2-ip" change the "root" to "ec2-user"
+
+
+# Once you have all the dependicies installed now you change the repository you just installed for your personal deployment
+    
+- sudo yum update -y
         
         
-2) sudo yum install git -y
+- sudo yum install git -y
         
         
-3) sudo amazon-linux-extras install nginx1
+- sudo amazon-linux-extras install nginx1
         
         
-4) git clone https://github.com/chandradeoarya/twoge.git
+- git clone https://github.com/chandradeoarya/twoge.git
 
 
-5) cd twoge
+- cd twoge
 
 
-6) sudo yum intall python3-pip -y
+- sudo yum intall python3-pip -y
 
 
-7) python3 -m venv venv
+- python3 -m venv venv
 
 
-8) sudo vim app.py
+- sudo vim app.py
     line 11 : app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI','postgresql://username:password@EndPoint-RDS:5432/dbName')
 
 
-9) source venv/bin/activate
+- source venv/bin/activate
 
 
-10) pip install -r requirements.txt
+- pip install -r requirements.txt
 
 
-11) cd /etc/systemd/system
+- cd /etc/systemd/system
+               
+  sudo vim twoge.service:
+  ```bash      
+  [Unit]
+
+         
+  Description=Gunicorn instance to serve twoge
         
+  Wants=network.target
+
+         
+  After=syslog.target network-online.target
         
-        12) sudo vim twoge.service
+  [Service]
+  Type=simple
 
+         
+  WorkingDirectory=/home/ec2-user/twoge
+
+         
+  Environment="PATH=/home/ec2-user/twoge/venv/bin"
+
+         
+  ExecStart=/home/ec2-user/twoge/venv/bin/gunicorn 	app:app -c /home/ec2-user/twoge/gunicorn_config.py
+
+         
+  Restart=always
+
+         
+  RestartSec=10
         
-        	[Unit]
+  [Install]
+  WantedBy=multi-user.target
+  ```
 
          
-        	Description=Gunicorn instance to serve twoge
-        
-        	Wants=network.target
-
-         
-        	After=syslog.target network-online.target
-        
-        	[Service]
-        	Type=simple
-
-         
-        	WorkingDirectory=/home/ec2-user/twoge
-
-         
-        	Environment="PATH=/home/ec2-user/twoge/venv/bin"
-
-         
-        	ExecStart=/home/ec2-user/twoge/venv/bin/gunicorn 	app:app -c /home/ec2-        
-            user/twoge/gunicorn_config.py
-
-         
-        	Restart=always
-
-         
-        	RestartSec=10
-        
-        	[Install]
-        	WantedBy=multi-user.target
-
-         
-13) sudo systemctl enable twoge
+- sudo systemctl enable twoge
 
 
-14) sudo systemctl start twoge
+- sudo systemctl start twoge
 
 
-15) sudo systemctl ststus twoge
+- sudo systemctl ststus twoge
 
 
-16) cd /etc/nginx
+- cd /etc/nginx
 
 
-17) sudo mkdir sites-available
+- sudo mkdir sites-available
 
 
-18) sudo mkdir sites-enabled
+- sudo mkdir sites-enabled
 
 
-19) cd sites-available
+- cd sites-available
 
-        
-        20)sudo vim twoge_nginx
-        	
-        	server {
-
-         
-           	 listen 80;
-
-             
-            	0.0.0.0/0;
-
-             
-        
-            	location / {
-
-             
-                	proxy_pass http://0.0.0.0:9876;  # Assuming Gunicorn is running on port 8000
-
-                 
-                	include /etc/nginx/proxy_params;
+- sudo vim twoge_nginx:
+```bash     	
+  server {
+    listen 80;
+    0.0.0.0/0;
+    location / {
+       proxy_pass http://0.0.0.0:9876;  # Assuming Gunicorn is running on port 8000
+       include /etc/nginx/proxy_params;
             }
-
-            
-        }
+}
+```
         
-21) sudo ln -s /etc/nginx/sites-available/twoge_nginx /etc/nginx/sites-enabled/
+- sudo ln -s /etc/nginx/sites-available/twoge_nginx /etc/nginx/sites-enabled/
+
+- sudo nginx -t
 
 
-22) sudo nginx -t
+- sudo systemctl reload nginx
 
 
-23) sudo systemctl reload nginx
+- sudo systemctl enable nginx
 
 
-24) sudo systemctl enable nginx
+- sudo systemctl start nginx
 
-
-25) sudo systemctl start nginx
-
-#Create A Image of the instance 
+# Create A Image of the instance 
 
 1) Select instance -> Actions -> Image and templates -> Create Image -> Enter image name->
             Add discription -> Leave everything else default -> Create Image
