@@ -16,17 +16,17 @@ During this assessment we will learn how to properly deploy a Ec2 instance for a
 -  Network Settings(CLICK EDIT) -> Vpc(CHOOSE EITHER DEFAULT VPC OR ANY OTHER ONE YOU MAY HAVE CREATED) -> Subnet (choose a public subnet) -> Auto-assign Ip(disable)
 Firewall/Security group -> Create Security Group -> Make security group that associates with the ec2 deployment -> Add Description -> Makes sure the security group has        SHH/Http/Https -> Source type(Custom) -> Source(0.0.0.0/0) -> Launch Instance.
      
-#Creatin Iam role for Ec2 to have Access to your S3 buckets
+# Creatin Iam role for Ec2 to have Access to your S3 buckets
 
-1)  Search bar -> Iam -> Left side should be "Roles" and click -> Create role
+-  Search bar -> Iam -> Left side should be "Roles" and click -> Create role
 
-2)  Trusted entity type -> Aws service -> use case -> Ec2 -> next
+-  Trusted entity type -> Aws service -> use case -> Ec2 -> next
 
-3)  Permission Polocies -> Search bar -> S3 -> AmazonS3FullAcces(click) -> Next
+-  Permission Polocies -> Search bar -> S3 -> AmazonS3FullAcces(click) -> Next
 
-4)  Role Details -> Role name -> Enter role name -> Create role
+-  Role Details -> Role name -> Enter role name -> Create role
 
-5)  Search bar -> ec2 -> Choose Instance -> Click Actions -> Security -> Modify Iam role -> select the Iam role we just created 
+-  Search bar -> ec2 -> Choose Instance -> Click Actions -> Security -> Modify Iam role -> select the Iam role we just created 
   
 
 
