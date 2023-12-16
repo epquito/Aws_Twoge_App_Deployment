@@ -106,117 +106,166 @@ During this assessment, we will learn how to properly deploy an EC2 instance for
   ]
 }
 ```
-# SSH into Ec2 to deploy Flask application With Gunicorn/Nginx
+# SSH into EC2 to Deploy Flask Application with Gunicorn/Nginx
 
-- Inside Aws console go to the search bar and type ec2
+1. Inside the AWS console, go to the search bar and type "EC2."
+2. Select the EC2 instance you want to SSH into.
+3. Once selected, click on "Connect" and then click on "SSH client."
+4. At the bottom, under "Example," copy the SSH command.
+5. In your terminal, navigate to the directory containing your key pair (it should end with .pem).
+6. Paste the copied SSH command. If it asks for confirmation with "yes" or "no," type "yes" and press Enter.
+7. If the command for SSH ends with "root@ec2-ip," change "root" to "ec2-user."
 
-     
-- Select a ec2 you want to ssh into
-     
-- once selected click on connect and click on ssh client
-    
-- There should be all the way on the bottom "Example:" that would have a ssh comand to copy
-    
-- go to your terminal
-      
-- make sure you change directory that holds your key pair you selected for that instance it should end with a .pem
+nstalling Dependencies and Deploying Flask Application
+Update the system and install Git:
 
-- paste the command and it will ask a yes or no to continue type yes and press enter
-     
-- If the command for ssh  ends with a "root@ec2-ip" change the "root" to "ec2-user"
+bash
+Copy code
+sudo yum update -y
+sudo yum install git -y
+Install Nginx:
+
+bash
+Copy code
+sudo amazon-linux-extras install nginx1
+Clone the GitHub repository:
+
+bash
+Copy code
+git clone https://github.com/chandradeoarya/twoge.git
+cd twoge
+Install Python dependencies:
+
+bash
+Copy code
+sudo yum install python3-pip -y
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+Edit the Flask app configuration:
+
+bash
+Copy code
+sudo vim app.py
+Update line 11 with the appropriate RDS database URI.
+
+Create and configure Gunicorn service:
+
+bash
+Copy code
+cd /etc/systemd/system
+sudo vim twoge.service
+Copy and paste the provided service configuration.
+
+Enable and start the Gunicorn service:
+
+bash
+Copy code
+sudo systemctl enable twoge
+sudo systemctl start twoge
+sudo systemctl status twoge
+Configure Nginx:
+
+bash
+Copy code
+cd /etc/nginx/sites-available
+sudo vim twoge_nginx
+Copy and paste the provided Nginx configuration.
+
+Create a symbolic link and test Nginx configuration:
+
+bash
+Copy code
+sudo ln -s /etc/nginx/sites-available/twoge_nginx /etc/nginx/sites-enabled/
+sudo nginx -t
+Reload Nginx and start it:
+
+bash
+Copy code
+sudo systemctl reload nginx
+sudo systemctl enable nginx
+sudo systemctl start nginx
 
 
-# Once you have all the dependicies installed now you change the repository you just installed for your personal deployment
-    
-- sudo yum update -y
-        
-        
-- sudo yum install git -y
-        
-        
-- sudo amazon-linux-extras install nginx1
-        
-        
-- git clone https://github.com/chandradeoarya/twoge.git
+User
+put it all in one mark down 
+ChatGPT
+Certainly! Here's the consolidated markdown:
 
+markdown
+Copy code
+# SSH into EC2 to Deploy Flask Application with Gunicorn/Nginx
 
-- cd twoge
+1. Inside the AWS console, go to the search bar and type "EC2."
+2. Select the EC2 instance you want to SSH into.
+3. Once selected, click on "Connect" and then click on "SSH client."
+4. At the bottom, under "Example," copy the SSH command.
+5. In your terminal, navigate to the directory containing your key pair (it should end with .pem).
+6. Paste the copied SSH command. If it asks for confirmation with "yes" or "no," type "yes" and press Enter.
+7. If the command for SSH ends with "root@ec2-ip," change "root" to "ec2-user."
 
+# Installing Dependencies and Deploying Flask Application
 
-- sudo yum intall python3-pip -y
+8. Update the system and install Git:
+   ```bash
+   sudo yum update -y
+   sudo yum install git -y
+9. Install Nginx:
+```bash
+sudo amazon-linux-extras install nginx1
+```
+10. Clone the GitHub repository:
+```bash
+git clone https://github.com/chandradeoarya/twoge.git
+cd twoge
+```
+11. Install Python dependencies:
+```bash
 
+sudo yum install python3-pip -y
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+12. Edit the Flask app configuration:
+```bash
+sudo vim app.py
+#Update line 11 with the appropriate RDS database URI.
+```
+13. Create and configure Gunicorn service:
+```bash
+cd /etc/systemd/system
+sudo vim twoge.service
+#Copy and paste the provided service configuration.
+```
 
-- python3 -m venv venv
-
-
-- sudo vim app.py
-    line 11 : app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI','postgresql://username:password@EndPoint-RDS:5432/dbName')
-
-
-- source venv/bin/activate
-
-
-- pip install -r requirements.txt
-
-
-- cd /etc/systemd/system
-               
-  sudo vim twoge.service:
-  ```bash      
-  [Unit]
-
-         
+```bash      
+  [Unit] 
   Description=Gunicorn instance to serve twoge
-        
   Wants=network.target
-
-         
   After=syslog.target network-online.target
-        
   [Service]
   Type=simple
-
-         
   WorkingDirectory=/home/ec2-user/twoge
-
-         
   Environment="PATH=/home/ec2-user/twoge/venv/bin"
-
-         
   ExecStart=/home/ec2-user/twoge/venv/bin/gunicorn 	app:app -c /home/ec2-user/twoge/gunicorn_config.py
-
-         
   Restart=always
-
-         
   RestartSec=10
-        
   [Install]
   WantedBy=multi-user.target
   ```
-
-         
-- sudo systemctl enable twoge
-
-
-- sudo systemctl start twoge
-
-
-- sudo systemctl ststus twoge
-
-
-- cd /etc/nginx
-
-
-- sudo mkdir sites-available
-
-
-- sudo mkdir sites-enabled
-
-
-- cd sites-available
-
-- sudo vim twoge_nginx:
+14. Enable and start the Gunicorn service:
+```bash
+sudo systemctl enable twoge
+sudo systemctl start twoge
+sudo systemctl status twoge
+```
+15. Configure Nginx:
+```bash
+cd /etc/nginx/sites-available
+sudo vim twoge_nginx
+#Copy and paste the provided Nginx configuration.
+```
 ```bash     	
   server {
     listen 80;
@@ -227,67 +276,112 @@ During this assessment, we will learn how to properly deploy an EC2 instance for
             }
 }
 ```
-        
-- sudo ln -s /etc/nginx/sites-available/twoge_nginx /etc/nginx/sites-enabled/
+16. Create a symbolic link and test Nginx configuration:
+```bash
+sudo ln -s /etc/nginx/sites-available/twoge_nginx /etc/nginx/sites-enabled/
+sudo nginx -t
+```
+17. Reload Nginx and start it:
+```bash
+sudo systemctl reload nginx
+sudo systemctl enable nginx
+sudo systemctl start nginx
+```
 
-- sudo nginx -t
-
-
-- sudo systemctl reload nginx
-
-
-- sudo systemctl enable nginx
-
-
-- sudo systemctl start nginx
-
-# Create A Image of the instance 
-
-- Select instance -> Actions -> Image and templates -> Create Image -> Enter image name->
-            Add discription -> Leave everything else default -> Create Image
-
-
-# Create Launch Template using the Image created 
-
-- Launch Templates -> Create launch template -> Enter name -> Template version ->
-        Application and OS images -> My AMIS -> Owned by me -> Amazon Machine Image (Select the Image we created of the instance)
-
-- Instance Type(t2.micro) -> Key pair(select the one used when ceating Ec2) 
-
-- Network Setting -> Subnet leave default -> Firewall/Security group(Select existing security group created for ec2 instance)    
-
-- Leave everything default Except for Advanced details -> IAM instance profile -> Select The Iam role we created that allows ec2 to have access to the s3 bbucket -> launch template
-            
-# Creating target group
-
-- Target groups -> Create target groups -> Instances -> Enter target group name -> Protocol port(9876) -> IPv4 -> Select Vpc(Vpc we used for the Ec2 instance) ->                 Leave everything else default -> next
-
-- Register targets -> Select Ec2 instances you want to register -> Include as pending below -> Create target group
-
-# Create Load Balancers  
-
-- Load Balancers -> Create load balancer -> Application Load Balancer -> Load Balancer  name -> Select Vpc(same one we choose for Ec2) -> Mappings -> Select Az(Availability     Zones) -> create SG that has http/https and a custom Tcp with port range 9876 ->  Listeners and routing -> select Target group previosly created -> Create Load balancer
-
-# Create ASG(Auto Scaling Group)
-
- - Auto scaling groups -> Create Auto Scaling group -> enter name of ASG -> Select Launch template previosly created -> select vpc(The one we used on Ec2) -> Select Availability zones -> Attach to an existing load balancer -> Select Load Balancer -> Health checks ->  Select Turn on ELB health checks -> Helath check grace period(120) -> next -> Select Group Size Recomended: Desired(2), Minimum(1), Maximum(3) -> Scaling Policies(none) -> Add Notification -> Create Topic -> Eneter topic name -> Add your email as recipients -> Choose event types(Launch, Terminate) make sure to confirm subscriptions -> Click next  until create ASG -> Create ASG
-
-
-# Create ASG dynamic policy
-
-- Slelect ASG -> Automatic Scaling -> Dynamic caling policies -> Create Dynamic scaling  policy -> Policy type -> Simple Scaling -> Enter policy name -> CLoudWatch alarm -> Create  CloudWatch 
-
-- Metric -> Select Metric -> EC2 -> By ASG -> Select AutoScalingGRoupName to populate the ASG you just created -> select your specific ASG that has the metric Value of          "CPUUtilization" ->   Select Metric
-
-- Specify Metric and conditions -> Static(average) -> Period(1minute) -> Condition -> Threshold(Satic) -> Whenever CPUtilization is (Greeater/Equal) -> Than(Enter Threshold) 
-
-- Notifications -> Create topic -> Enter topic name -> Enter Email endpoint -> create Topic
-
-- Name and description -> Enter alarm name -> Next -> Create Alarm
-
-- Go back Create Dynamic Scaling Polocy -> CLick Refresh button next to CLoudWatch Alarm  and select Newly created alarm -> Take Action -> Add / 1 / capacity units -> And then  Wait (60) -> Create 
-
-# Now you have just Deployed A Flask Application With Gunicorn and Nginx On a Ec2 With ELB,ASG allowing the application to have high scalability and resiliency
+# Create an Image of the Instance
+1. Select your EC2 instance.
+2. Click on "Actions" -> "Image and templates" -> "Create Image."
+3. Enter a name for your image.
+4. Add a description (optional).
+5. Leave all other settings as default.
+6. Click on "Create Image."
+# Create Launch Template using the Image created
+1. Navigate to "Launch Templates" and click on "Create launch template."
+2. Enter a name and template version.
+3. Under "Application and OS images":
+   - Choose "My AMIs."
+   - Select "Owned by me."
+   - Choose the Amazon Machine Image (AMI) created from the EC2 instance.
+4. Under "Instance Type," select "t2.micro" and choose the key pair used when creating the EC2 instance.
+5. For "Network Settings," leave the subnet as default, and for "Firewall/Security group," select the existing security group created for the EC2 instance.
+6. Leave everything else as default, except for "Advanced details":
+   - Under "IAM instance profile," select the IAM role that allows EC2 to have access to the S3 bucket.
+7. Click on "Create launch template."
+# Creating Target Group
+1. Navigate to "Target groups" and click on "Create target group."
+2. Under "Instances":
+   - Enter a target group name.
+   - Set "Protocol" to the desired protocol (e.g., HTTP or HTTPS).
+   - Set "Port" to the target port (e.g., 9876).
+   - Choose "IPv4."
+   - Select the VPC used for the EC2 instance.
+   - Leave all other settings as default.
+   - Click "Next."
+3. Under "Register targets":
+   - Select the EC2 instances you want to register.
+   - Include as pending below.
+   - Click "Create target group."
+# Create Load Balancers
+1. Navigate to "Load Balancers" and click on "Create load balancer."
+2. Choose "Application Load Balancer."
+3. Enter a Load Balancer name.
+4. Select the VPC (the same one used for the EC2 instance).
+5. Under "Mappings," select Availability Zones (AZ).
+6. Create a Security Group (SG) that includes HTTP/HTTPS and a custom TCP with a port range of 9876.
+7. Proceed to "Listeners and routing."
+8. Select the Target Group previously created.
+9. Click "Create Load Balancer."
+# Create Auto Scaling Group (ASG)
+1. Navigate to "Auto Scaling groups" and click on "Create Auto Scaling group."
+2. Enter a name for the Auto Scaling group (ASG).
+3. Select the Launch template previously created.
+4. Choose the VPC (the same one used for the EC2 instance).
+5. Select the Availability Zones.
+6. Attach to an existing load balancer:
+   - Choose the Load Balancer.
+7. Under "Health checks," turn on ELB health checks:
+   - Set Health check grace period to 120.
+8. Click "Next."
+9. Under "Group Size":
+   - Recommended settings: Desired (2), Minimum (1), Maximum (3).
+10. Leave Scaling Policies as "none."
+11. Add Notification:
+    - Create a topic.
+    - Enter a topic name.
+    - Add your email as recipients.
+    - Choose event types (Launch, Terminate).
+    - Confirm subscriptions.
+12. Click "Next" until you reach "Create Auto Scaling group."
+13. Click "Create Auto Scaling group."
+# Create Auto Scaling Group (ASG) Dynamic Scaling Policy
+1. Select the Auto Scaling Group (ASG).
+2. Go to "Automatic Scaling" -> "Dynamic scaling policies" -> "Create Dynamic scaling policy."
+3. Choose the policy type as "Simple Scaling."
+4. Enter a policy name.
+5. For CloudWatch alarm, click "Create CloudWatch."
+6. Select the metric:
+   - Metric -> Select Metric -> EC2 -> By ASG -> Choose AutoScalingGroupName to populate the ASG you just created.
+   - Select your specific ASG with the metric value of "CPUUtilization."
+   - Click "Select Metric."
+7. Specify Metric and Conditions:
+   - For Static (average), set Period to 1 minute.
+   - Condition: Threshold (Static).
+   - Whenever CPUUtilization is (Greater/Equal) than (Enter Threshold).
+8. Notifications:
+   - Create a topic.
+   - Enter a topic name.
+   - Enter an email endpoint.
+   - Create the topic.
+9. Name and Description:
+   - Enter an alarm name.
+   - Click "Next."
+   - Click "Create Alarm."
+10. Go back to "Create Dynamic Scaling Policy."
+11. Click the Refresh button next to CloudWatch Alarm and select the newly created alarm.
+12. Take Action: Add / 1 / capacity units.
+13. Wait (60 seconds).
+14. Click "Create."
+# Great job! It looks like you've successfully deployed a Flask application with Gunicorn and Nginx on an EC2 instance with ELB and ASG, enabling high scalability and resiliency. If you have any further questions or need additional assistance, feel free to ask!
         
 
         
