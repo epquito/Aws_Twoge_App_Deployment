@@ -1,18 +1,10 @@
 # Assessment-1
-
 During this assessment, we will learn how to properly deploy an EC2 instance for a Flask application that will use both Gunicorn and NGINX.
-
 ## Development Tools
-
 - AWS Account
 - WSL2 or any Linux distribution
 - DBeaver or any database management tool
-
-
-# Deploying Ec2.
-
 # Deploying EC2
-
 1. Navigate to the search bar, type "EC2," and select "Launch Instance."
 2. Enter a name for your instance.
 3. Under "Application and OS Images," choose "Amazon Linux" as the OS.
@@ -29,21 +21,13 @@ During this assessment, we will learn how to properly deploy an EC2 instance for
    - Source Type: Custom.
    - Source: 0.0.0.0/0.
 8. Click "Launch Instance."
-     
-# Creatin Iam role for Ec2 to have Access to your S3 buckets
-
--  Search bar -> Iam -> Left side should be "Roles" and click -> Create role
-
--  Trusted entity type -> Aws service -> use case -> Ec2 -> next
-
--  Permission Polocies -> Search bar -> S3 -> AmazonS3FullAcces(click) -> Next
-
--  Role Details -> Role name -> Enter role name -> Create role
-
--  Search bar -> ec2 -> Choose Instance -> Click Actions -> Security -> Modify Iam role -> select the Iam role we just created 
-  
-
-
+# Creating IAM Role for EC2 to Access Your S3 Buckets
+1. In the search bar, type "IAM," select "Roles" on the left side, and click "Create role."
+2. Choose the trusted entity type: AWS service, use case: EC2, and click "Next."
+3. Under "Permissions Policies," use the search bar, type "S3," select "AmazonS3FullAccess," and click "Next."
+4. In "Role Details," enter a role name and click "Create role."
+5. In the search bar, type "EC2," choose your EC2 instance, click "Actions," navigate to "Security," and click "Modify IAM role."
+6. Select the IAM role created in step 4.
 # Deploying RDS
 
 -  Search Bar -> RDS -> Create database
