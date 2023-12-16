@@ -29,79 +29,83 @@ During this assessment, we will learn how to properly deploy an EC2 instance for
 5. In the search bar, type "EC2," choose your EC2 instance, click "Actions," navigate to "Security," and click "Modify IAM role."
 6. Select the IAM role created in step 4.
 # Deploying RDS
+1. In the search bar, type "RDS" and select "Create database."
+2. Choose "Standard create," Engine type: PostgreSQL, Engine Version: 15.3-r2, and Templates: Free tier.
+3. Under "Settings":
+   - DB instance identifier: Create and enter the name of the database.
+   - Master username: Change the username (recommended).
+   - Master Password: Enter a personal password and confirm it.
 
--  Search Bar -> RDS -> Create database
+4. In "Instance configuration," choose db.t3.micro.
+5. Under "Storage," leave default values, and deselect "Enable Storage Autoscaling."
+6. In "Connectivity":
+   - Don't connect to an EC2 compute resource.
+   - IPv4: Choose the same VPC you selected for the EC2.
+   - DB subnet group: Leave default.
+   - Public Access: Yes.
+   - VPC security group: Create a new one and enter a name.
+   - Additional configurations:
+      - Database port: 5432.
 
--  Standard create -> Engine type(PostgreSQL) -> Engine Version(15.3-r2) -> Templates(Free tier)
+7. Database authentication: Select "Password authentication."
+8. Leave all values under "Monitoring" as default.
+9. In "Additional configuration":
+   - Database option: Initial database name (Enter the database name associated with your Flask app).
+   - Select "Create Database."
+   - Initialization may take 5-10 minutes.
 
--  Settings -> DB instance identifier(Create and enter the name of db) -> Master username(Would reccomend changing username) -> Master Password(Enter personal password)>     Confirm Password
+10. Once the database is created, select it and go to the "Connectivity & security" tab.
+11. Select "VPC Security groups," choose the security group you created for your database, and click "Edit inbound rules."
+12. Ensure the rule looks like this:
+    - Security group rule Id.
+    - Type: PostgreSQL.
+    - Protocol: TCP.
+    - Port Range: 5432.
+    - Source: Custom.
+    - Destination: Security group of your EC2 instance previously created.
+# Creating an S3 Bucket to Hold Static Files
+1. In the search bar, type "S3" and select "Create bucket."
+2. Enter a unique bucket name and choose the AWS Region assigned to you.
+3. Under "Object Ownership":
+   - Disable ACLs.
 
--  Instance configuration -> db.t3.micro
+4. In "Block Public Access settings for this bucket":
+   - Unclick "Block all public access."
+   - Acknowledge the action.
 
--  Storage -> Leave default values -> Storage autoscaling -> deselect Enable Storage autoscaling
+5. Enable "Bucket versioning."
+6. Click "Create bucket" and leave everything else as default.
 
--  Connenctivity -> Don't connect to an Ec2 compute resource -> IPv4 -> Virtual private cloud(Choose the same vpc you selected on the Ec2) ->  DB subnet group(Leave 
-      deafult) -> Public Access(Yes) -> VPC security group(Create new) -> New Vpc security group name(enetr name for security group)# leave the rest deafult -> Additional 
-      configurations -> Database port(5432)
+7. Click on your bucket again.
+8. On the "Object" page, upload the static files you want to upload.
 
--  Database authentication -> Password authentication(Select)
+9. On the tab, click "Permissions."
+10. Create a bucket policy that allows EC2 to have access to objects/object versions. Use the following JSON snippet:
 
--  leave all values under Monitoring as default and dont change anything
-
--  Additional configuration -> Database option -> Initial database name(Eneter database name associated to your flask app)
-
--  Select Create Database #Keep in mind the inilization of the database is going to take about 5-10 minutes
-
--  Once Database is created select and it should direct you to a page with a tab that has Connectivity & security
-
--  Select VPC Security groups -> select the Security group you created for your database -> Edit inbound rules  -> it should loom like this -> Security group rule Id ->           Type(PstgreSQL) -> Protocol(TCP) -> Port Rage(5432) -> Source(Custom) -> Destiniation(Security group of your EC2 instance previosly created)
-
-# Creating a S3 bucket to hold static files
-
--  Search bar -> S3 -> Create bucket
-    
--  Bucket name(Create bucket name) -> AWS Region(Use the Region assigned to you)
-
--  Object Ownershipp -> ACLs disabled
-
--  Block Public Acces settings for this bucket -> Block all public access(unclick) -> Acknowlege (click)
-
--  Bucket versioning(Enabled)
-
--  Create bucket(Leave everything else default)
-
--  Click on your bucket again
-  
--  Object page -> Upload -> Choose the static files you want to upload
-
--  On tab click Permissions -> Create bucket policy That will allow Ec2 to have access to object/object version
-
-- ```bash
-  {    
-        "Version": "2012-10-17",
-        "Statement": [
-        {
-            "Sid": "AllowEC2Instance",
-            "Effect": "Allow",
-            "Principal": {
-                "Service": "ec2.amazonaws.com"
-            },
-            "Action": [
-                "s3:GetObject",
-                "s3:GetObjectVersion"
-            ],
-            "Resource": "arn:aws:s3:::s3-bucket-name/*",
-            "Condition": {
-                "StringEquals": {
-                    "aws:userid": "arn:aws:iam::role-ID/Name of role"
-                }
-            }
+```json
+{    
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowEC2Instance",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": [
+        "s3:GetObject",
+        "s3:GetObjectVersion"
+      ],
+      "Resource": "arn:aws:s3:::s3-bucket-name/*",
+      "Condition": {
+        "StringEquals": {
+          "aws:userid": "arn:aws:iam::role-ID/Name of role"
         }
-        ]
-        }
-  ```
-      
-
+      }
+    }
+  ]
+}
+```
 # SSH into Ec2 to deploy Flask application With Gunicorn/Nginx
 
 - Inside Aws console go to the search bar and type ec2
