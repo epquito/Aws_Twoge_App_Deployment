@@ -1,20 +1,34 @@
-# Assesment-1
-During this assessment we will learn how to properly deploy a Ec2 instance for a Flask application that will use both Gunicorn and NGINX. 
+# Assessment-1
 
-# Devleopment tools.
+During this assessment, we will learn how to properly deploy an EC2 instance for a Flask application that will use both Gunicorn and NGINX.
 
-- AWS Account.
-  
-- WSL2 or any linux op.
-  
-- DBeaver or any db.
+## Development Tools
+
+- AWS Account
+- WSL2 or any Linux distribution
+- DBeaver or any database management tool
+
 
 # Deploying Ec2.
 
-- Search Bar -> Ec2 -> Launch Instance.
-- Enter name -> Application and OS Images (SELECT AMAZON LINUX ) -> Amazon Machine Image(AMAZON LINUX 2 AMI) -> Instance Type(t2.micro) -> Key pair -> Select key pair associated to your specific account.
--  Network Settings(CLICK EDIT) -> Vpc(CHOOSE EITHER DEFAULT VPC OR ANY OTHER ONE YOU MAY HAVE CREATED) -> Subnet (choose a public subnet) -> Auto-assign Ip(disable)
-Firewall/Security group -> Create Security Group -> Make security group that associates with the ec2 deployment -> Add Description -> Makes sure the security group has        SHH/Http/Https -> Source type(Custom) -> Source(0.0.0.0/0) -> Launch Instance.
+# Deploying EC2
+
+1. Navigate to the search bar, type "EC2," and select "Launch Instance."
+2. Enter a name for your instance.
+3. Under "Application and OS Images," choose "Amazon Linux" as the OS.
+   - Amazon Machine Image (AMI): Choose "Amazon Linux 2 AMI."
+4. Select the instance type (e.g., t2.micro).
+5. Configure the Key Pair by selecting a key pair associated with your account.
+6. In "Network Settings," click "Edit":
+   - VPC: Choose either the default VPC or another created VPC.
+   - Subnet: Choose a public subnet.
+   - Auto-assign IP: Disable.
+7. Firewall/Security Group:
+   - Create a new Security Group.
+   - Add a description and ensure the security group includes SSH/HTTP/HTTPS.
+   - Source Type: Custom.
+   - Source: 0.0.0.0/0.
+8. Click "Launch Instance."
      
 # Creatin Iam role for Ec2 to have Access to your S3 buckets
 
