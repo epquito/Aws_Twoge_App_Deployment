@@ -120,9 +120,10 @@ During this assessment, we will learn how to properly deploy an EC2 instance for
 # Installing Dependencies and Deploying Flask Application
 
 8. Update the system and install Git:
-   ```bash
-   sudo yum update -y
-   sudo yum install git -y
+```bash
+sudo yum update -y
+sudo yum install git -y
+```
 9. Install Nginx:
 ```bash
 sudo amazon-linux-extras install nginx1
