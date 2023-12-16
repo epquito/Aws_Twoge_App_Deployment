@@ -106,15 +106,6 @@ During this assessment, we will learn how to properly deploy an EC2 instance for
   ]
 }
 ```
-# SSH into EC2 to Deploy Flask Application with Gunicorn/Nginx
-
-1. Inside the AWS console, go to the search bar and type "EC2."
-2. Select the EC2 instance you want to SSH into.
-3. Once selected, click on "Connect" and then click on "SSH client."
-4. At the bottom, under "Example," copy the SSH command.
-5. In your terminal, navigate to the directory containing your key pair (it should end with .pem).
-6. Paste the copied SSH command. If it asks for confirmation with "yes" or "no," type "yes" and press Enter.
-7. If the command for SSH ends with "root@ec2-ip," change "root" to "ec2-user."
 
 # SSH into EC2 to Deploy Flask Application with Gunicorn/Nginx
 
