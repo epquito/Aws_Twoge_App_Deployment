@@ -4,6 +4,61 @@ During this assessment, we will learn how to properly deploy an EC2 instance for
 - AWS Account
 - WSL2 or any Linux distribution
 - DBeaver or any database management tool
+# Creating VPC Network
+
+1. Within the AWS Console, type "VPC" in the search bar.
+2. Click on "Create VPC."
+   - Choose "VPC only."
+   - Optionally, add a name tag.
+   - Enter an IPv4 CIDR block (e.g., 10.0.0.0/24).
+   - Choose "No" for IPv6.
+   - Set "Tenancy" to default.
+3. Click "Create VPC."
+
+# Creating Subnets for VPC
+
+1. Click "Create Subnet."
+2. Choose the VPC ID created earlier.
+3. Enter a subnet name.
+4. Select the availability zone.
+5. Enter an IPv4 CIDR block.
+6. Add more subnets (create two public and two private subnets).
+   - Repeat steps 3-6 for each new subnet.
+
+# Create Internet Gateway (IGW)
+
+1. Click on "Internet Gateways."
+2. Create an Internet gateway.
+3. Enter a name and click "Create."
+4. Attach the IGW to the VPC.
+   - Choose the VPC created.
+# Create Route Table
+1. Click on "Route tables."
+2. Create a route table.
+3. Enter a name.
+4. Select the VPC created.
+5. Click "Create."
+6. Click on "Subnet associations."
+   - Select subnets to associate with the route table.
+7. Click on "Routes."
+8. Edit routes and add a route to the IGW for public subnets.
+   - Repeat for private subnets but use a NAT gateway instead.
+# Create NAT Gateway for Private Route
+1. Click on "NAT Gateways."
+2. Create a NAT gateway.
+3. Enter a name.
+4. Select a public subnet.
+5. Set connectivity to "Public."
+6. Allocate an Elastic IP.
+7. Click "Create NAT Gateway."
+# Associate NAT Gateway to Private Route Table
+1. Select the public route table.
+2. Edit the inbound rule to allow traffic from the private route table.
+   - Allow traffic originating from the private subnet CIDR block.
+3. Go to the private route table.
+4. Establish a route for outbound traffic to the internet through the NAT Gateway.
+   - Add a route with destination `0.0.0.0/0` (or the specific CIDR block you want) pointing to the NAT Gateway.
+5. Save the changes.
 # Deploying EC2
 1. Navigate to the search bar, type "EC2," and select "Launch Instance."
 2. Enter a name for your instance.
