@@ -1,5 +1,6 @@
 # Assessment-1
 During this assessment, we will learn how to properly deploy an EC2 instance for a Flask application that will use both Gunicorn and NGINX.
+
       ![Alt Text](https://github.com/epquito/Assesment-1/blob/main/Assesment-1.png)
 ## Development Tools
 - AWS Account
