@@ -1,5 +1,5 @@
 # Architecture Diagram
-[Link Text](https://github.com/epquito/Assesment-1/raw/main/Assesment1.pdf)
+[Link Text](https://github.com/epquito/Assesment-1/blob/main/Assesment-1.png)
 
 # Assessment-1
 During this assessment, we will learn how to properly deploy an EC2 instance for a Flask application that will use both Gunicorn and NGINX.
