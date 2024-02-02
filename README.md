@@ -353,7 +353,7 @@ sudo systemctl start nginx
 12. Take Action: Add / 1 / capacity units.
 13. Wait (60 seconds).
 14. Click "Create."
-# Great job! It looks like you've successfully deployed a Flask application with Gunicorn and Nginx on an EC2 instance with ELB and ASG, enabling high scalability and resiliency. If you have any further questions or need additional assistance, feel free to ask!
+# Great job! It looks like you've successfully deployed a Flask application with Gunicorn and Nginx on an EC2 instance with ELB and ASG, enabling high scalability and resiliency.
         
 
         
